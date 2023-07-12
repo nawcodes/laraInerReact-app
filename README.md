@@ -15,3 +15,6 @@ LaraInnerReact App it its aplication base with Laravel 10 | Inertia JS | React J
 4. php artisan migrate --seed
 5. php artisan serve
 6. npm run dev
+
+## Inpiration
+https://santrikoding.com/tutorial-laravel-inertiajs-reactjs-2-installasi-konfigurasi-inertiajs-server-side
