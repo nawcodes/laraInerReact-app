@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('todos', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('user_id');
             $table->text('description');
-            $table->date('deadline')->nullable();
+            $table->date('duedate')->nullable();
+            $table->string('priority')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

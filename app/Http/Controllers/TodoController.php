@@ -9,9 +9,8 @@ use Inertia\Inertia;
 class TodoController extends Controller
 {
     public function index() {
-        return Inertia('Todo/Index', [
-            'todo' => Todo::latest()->get(),
-        ]);
+        $todo = Todo::paginate(4);
+        return Inertia('Todo/Index', compact('todo'));
 
     }
 }

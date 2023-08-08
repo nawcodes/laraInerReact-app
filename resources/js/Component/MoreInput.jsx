@@ -1,4 +1,4 @@
-const MoreInput = ({onKeyup}) => {
+const MoreInput = ({onKeyup, value = null}) => {
 
 
     return (
@@ -12,7 +12,7 @@ const MoreInput = ({onKeyup}) => {
                         className="w-full border-none bg-inherit focus:ring-0 focus:outline-none"
                         id="description"
                         onChange={(e) => onKeyup(e)}
-                    ></textarea>
+                    >{value.description}</textarea>
                 </div>
                 <div className="flex  mt-2">
                     <div className="w-full ">
@@ -22,6 +22,7 @@ const MoreInput = ({onKeyup}) => {
                         <div className="bg-white w-full rounded p-2 shadow-lg cursor-pointer">
                             <input
                                 type="date"
+                                defaultValue={value.deadline}
                                 placeholder="Type Here"
                                 className="w-full border-none bg-inherit focus:ring-0 focus:outline-none  text-slate-500"
                                 onChange={(e) => onKeyup(e)}
@@ -41,8 +42,9 @@ const MoreInput = ({onKeyup}) => {
                                 id="priority"
                                 className="w-full border-none bg-inherit focus:ring-0 focus:outline-none text-slate-500"
                                 onChange={(e) => onKeyup(e)}
+                                defaultValue={value.priority}
                             >
-                                <option defaultValue="" selected>Choose a Priority</option>
+                                <option selected>Choose a Priority</option>
                                 <option value="none">None</option>
                                 <option value="low">low</option>
                                 <option value="high">High</option>

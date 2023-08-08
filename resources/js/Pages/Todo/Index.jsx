@@ -5,10 +5,10 @@ import InputSection from "../../Component/InputSection";
 import ListTodo from "../../Component/ListTodo";
 import MoreInput from "../../Component/MoreInput";
 
-const Index = () => {
+const Index = ({ todo }) => {
     const [search, setSearch] = useState("");
 
-    const [openList, setOpenList] = useState(true);
+    const [openList, setOpenList] = useState(false);
 
     const [payload, setPayload] = useState({
         title: "",
@@ -17,15 +17,33 @@ const Index = () => {
         priority: "",
     });
 
+
     const [isMoreInput, setIsMoreInput] = useState(false);
 
-    const handleTitleClick = (e) => {
+    const handleTitleClick = (e, id = null) => {
+        if (id) {
+            setOpenList(false);
+            let data = todo.data.find((item) => item.id === id);
+            // delete properties
+            const { deleted_at, created_at, updated_at, ...filteredObj } = data;
+
+            setPayload((value) => ({
+                ...value,
+                ...filteredObj,
+            }));
+        }
         openMoreInput();
     };
 
     const handleSearch = (e) => {
         setSearch(e.target.value);
     };
+
+
+    let filteredTodo = todo.data.filter((item) =>
+        item.title.toLocaleLowerCase().includes(search.toLocaleLowerCase())
+    );
+
 
     const openMoreInput = () => {
         if (isMoreInput == true) {
@@ -45,18 +63,41 @@ const Index = () => {
     }
 
     function handleListAll(e) {
+        setIsMoreInput(false);
+        setPayload({
+            title: "",
+            description: "",
+            duedate: "",
+            priority: "",
+        });
         setOpenList(true);
     }
 
-    const todoLists = Array.from({ length: 5 }, (_, index) => index + 1);
+    function handleCloseList(e) {
+        setOpenList(false);
+    }
+
+    function handleAddButton(e) {
+        setOpenList(false);
+
+        setPayload({
+            title: "",
+            description: "",
+            duedate: "",
+            priority: "",
+        });
+    }
+
+    console.log(filteredTodo);
+    console.log(todo);
 
     return (
         <>
-            <div className="w-full border-b-2 border-b-black shadow ">
+            <div className="w-full flex justify-center border-b-2 border-b-slate-300 shadow">
                 <input
                     type="text"
                     placeholder="Search Your do"
-                    className="w-full border-none bg-inherit focus:ring-0 
+                    className="border-none bg-inherit focus:ring-0 
                     focus:outline-none"
                     defaultValue=""
                     id="search"
@@ -64,28 +105,61 @@ const Index = () => {
                 />
             </div>
             <div className="w-full h-screen flex justify-center items-center">
-                <div className="w-full flex justify-center items-center">
+                <div className="w-full flex justify-center flex-col items-center">
+                    <div className="flex justify-end lg:w-1/3 w-5/6 px-5 -my-6 z-10">
+                        <button
+                            type="button"
+                            className="text-white hover:bg-blue-800 focus:ring-4 shadow-2xl drop-shadow-xl focus:ring-blue-300 font-medium rounded-full text-sm p-1 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-white-800"
+                            onClick={handleAddButton}
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                strokeWidth={1.5}
+                                stroke="currentColor"
+                                className="w-6 h-6"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M12 4.5v15m7.5-7.5h-15"
+                                />
+                            </svg>
+                        </button>{" "}
+                    </div>
+
                     <div
-                        className={`flex flex-col justify-center  items-center border-2 rounded-lg  ${
-                            isMoreInput ? "shadow border-slate-400" : ""
+                        className={`flex flex-col justify-center  items-center  rounded-lg  ${
+                            isMoreInput
+                                ? "border-2 shadow border-slate-400"
+                                : ""
                         } lg:w-1/3 w-5/6 p-6`}
                     >
                         {openList ? (
-                            todoLists.map((todo, index) => (
-                                <div
-                                    className="bg-white lg:2/3 w-full rounded my-1 p-2 shadow-lg cursor-pointer"
-                                    onClick={(e) => handleTitleClick(e)}
-                                >
-                                    <input
-                                        type="text"
-                                        placeholder="Type Here"
-                                        className="lg:w-2/3 w-full border-none bg-inherit focus:ring-0 focus:outline-none"
-                                        defaultValue={index}
-                                        onClick={(e) => e.stopPropagation()}
-                                        onChange={handleValues}
-                                    />
-                                </div>
-                            ))
+                            filteredTodo ? (
+                                filteredTodo.map((value, index) => (
+                                    <div
+                                        key={index}
+                                        className="bg-white lg:2/3 w-full rounded my-1 p-2 shadow-lg cursor-pointer"
+                                        onClick={(e) =>
+                                            handleTitleClick(e, value.id)
+                                        }
+                                    >
+                                        {console.log(value)}
+                                        <input
+                                            type="text"
+                                            placeholder="Type Here"
+                                            className="lg:w-2/3 w-full border-none bg-inherit focus:ring-0 focus:outline-none"
+                                            value={value.title}
+                                            onClick={(e) => e.stopPropagation()}
+                                            onChange={handleValues}
+                                        />
+                                    </div>
+                                ))
+                            ) : (
+                                <></>
+                            )
                         ) : (
                             <div
                                 className="bg-white lg:2/3 w-full rounded my-1 p-2 shadow-lg cursor-pointer"
@@ -95,7 +169,7 @@ const Index = () => {
                                     type="text"
                                     placeholder="Type Here"
                                     className="lg:w-2/3 w-full border-none bg-inherit focus:ring-0 focus:outline-none"
-                                    defaultValue=""
+                                    defaultValue={payload.title}
                                     onClick={(e) => e.stopPropagation()}
                                     onChange={handleValues}
                                 />
@@ -105,26 +179,26 @@ const Index = () => {
                         {isMoreInput && (
                             <MoreInput
                                 onKeyup={(e) => handleValues(e)}
-                            ></MoreInput>
-                        )}
-
-                        {isMoreInput && (
-                            <MoreInput
-                                onKeyup={(e) => handleValues(e)}
+                                value={payload}
                             ></MoreInput>
                         )}
 
                         <div className="flex w-full py-2 text-slate-500">
                             {openList ? (
-                                <p className="mx-1 hover:underline cursor-pointer">
+                                <p
+                                    className="mx-1 hover:underline cursor-pointer"
+                                    onClick={handleCloseList}
+                                >
                                     Hide
                                 </p>
                             ) : (
-                                <p className="mx-1 hover:underline cursor-pointer">
-                                    All (28)
+                                <p
+                                    className="mx-1 hover:underline cursor-pointer"
+                                    onClick={handleListAll}
+                                >
+                                    All ({todo.data.length})
                                 </p>
                             )}
-                           
                         </div>
                         <div className="">
                             {/* <nav aria-label="Page navigation example">
