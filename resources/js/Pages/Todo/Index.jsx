@@ -10,13 +10,7 @@ const Index = ({ todo }) => {
 
     const [openList, setOpenList] = useState(false);
 
-    const [payload, setPayload] = useState({
-        title: "",
-        description: "",
-        duedate: "",
-        priority: "",
-    });
-
+    const [payload, setPayload] = useState({});
 
     const [isMoreInput, setIsMoreInput] = useState(false);
 
@@ -37,13 +31,12 @@ const Index = ({ todo }) => {
 
     const handleSearch = (e) => {
         setSearch(e.target.value);
+        setOpenList(true);
     };
-
 
     let filteredTodo = todo.data.filter((item) =>
         item.title.toLocaleLowerCase().includes(search.toLocaleLowerCase())
     );
-
 
     const openMoreInput = () => {
         if (isMoreInput == true) {
@@ -64,12 +57,7 @@ const Index = ({ todo }) => {
 
     function handleListAll(e) {
         setIsMoreInput(false);
-        setPayload({
-            title: "",
-            description: "",
-            duedate: "",
-            priority: "",
-        });
+        setPayload({});
         setOpenList(true);
     }
 
@@ -80,16 +68,10 @@ const Index = ({ todo }) => {
     function handleAddButton(e) {
         setOpenList(false);
 
-        setPayload({
-            title: "",
-            description: "",
-            duedate: "",
-            priority: "",
-        });
+        setPayload({});
     }
 
-    console.log(filteredTodo);
-    console.log(todo);
+    function handleEditButton(e) {}
 
     return (
         <>
@@ -106,27 +88,51 @@ const Index = ({ todo }) => {
             </div>
             <div className="w-full h-screen flex justify-center items-center">
                 <div className="w-full flex justify-center flex-col items-center">
-                    <div className="flex justify-end lg:w-1/3 w-5/6 px-5 -my-6 z-10">
-                        <button
-                            type="button"
-                            className="text-white hover:bg-blue-800 focus:ring-4 shadow-2xl drop-shadow-xl focus:ring-blue-300 font-medium rounded-full text-sm p-1 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-white-800"
-                            onClick={handleAddButton}
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                strokeWidth={1.5}
-                                stroke="currentColor"
-                                className="w-6 h-6"
+                    <div className="flex justify-end lg:w-1/3 w-5/6 px-5 -my-6 z-10 ">
+                        {!openList && (
+                            <button
+                                type="button"
+                                className="text-white hover:bg-blue-800 focus:ring-4 shadow-2xl drop-shadow-xl focus:ring-blue-300 font-medium rounded-full text-sm p-1 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-white-800"
+                                onClick={handleAddButton}
                             >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M12 4.5v15m7.5-7.5h-15"
-                                />
-                            </svg>
-                        </button>{" "}
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth={1.5}
+                                    stroke="currentColor"
+                                    className="w-6 h-6"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M12 4.5v15m7.5-7.5h-15"
+                                    />
+                                </svg>
+                            </button>
+                        )}
+                        {payload.id && (
+                            <button
+                                type="button"
+                                className="text-white hover:bg-blue-800 focus:ring-4 shadow-2xl drop-shadow-xl focus:ring-blue-300 font-medium rounded-full text-sm p-1 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-white-800"
+                                onClick={handleEditButton}
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth={1.5}
+                                    stroke="currentColor"
+                                    className="w-6 h-6 p-1"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
+                                    />
+                                </svg>
+                            </button>
+                        )}
                     </div>
 
                     <div
@@ -177,10 +183,13 @@ const Index = ({ todo }) => {
                         )}
 
                         {isMoreInput && (
-                            <MoreInput
+                            !openList && (
+                                <MoreInput
                                 onKeyup={(e) => handleValues(e)}
                                 value={payload}
                             ></MoreInput>
+                            )
+                            
                         )}
 
                         <div className="flex w-full py-2 text-slate-500">
