@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "@inertiajs/inertia-react";
 import Layout from "../../Layouts/Default";
 import InputSection from "../../Component/InputSection";
 import ListTodo from "../../Component/ListTodo";
 import MoreInput from "../../Component/MoreInput";
+import axios from "axios";
 
 const Index = ({ todo }) => {
     const [search, setSearch] = useState("");
@@ -67,8 +68,23 @@ const Index = ({ todo }) => {
 
     function handleAddButton(e) {
         setOpenList(false);
+        axios
+            .post("/todo", payload)
+            .then((response) => {
+                setPayload({
+                    title:'',
+                    description:'',
+                    duedate: '',
+                    priority: ''
+                });
+                setIsMoreInput(false);
+                window.alert("Todo Inserted");
+            })
+            .catch((error) => {
+                window.alert(error.message);
+                setPayload({});
+            });
 
-        setPayload({});
     }
 
     function handleEditButton(e) {}
@@ -154,9 +170,11 @@ const Index = ({ todo }) => {
                                     >
                                         {console.log(value)}
                                         <input
+                                            id="title"
                                             type="text"
                                             placeholder="Type Here"
                                             className="lg:w-2/3 w-full border-none bg-inherit focus:ring-0 focus:outline-none"
+                                            defaultValue={value.title}
                                             value={value.title}
                                             onClick={(e) => e.stopPropagation()}
                                             onChange={handleValues}
@@ -173,23 +191,22 @@ const Index = ({ todo }) => {
                             >
                                 <input
                                     type="text"
+                                    id="title"
                                     placeholder="Type Here"
                                     className="lg:w-2/3 w-full border-none bg-inherit focus:ring-0 focus:outline-none"
                                     defaultValue={payload.title}
+                                    value={payload.title}
                                     onClick={(e) => e.stopPropagation()}
                                     onChange={handleValues}
                                 />
                             </div>
                         )}
 
-                        {isMoreInput && (
-                            !openList && (
-                                <MoreInput
+                        {isMoreInput && !openList && (
+                            <MoreInput
                                 onKeyup={(e) => handleValues(e)}
                                 value={payload}
                             ></MoreInput>
-                            )
-                            
                         )}
 
                         <div className="flex w-full py-2 text-slate-500">
