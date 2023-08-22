@@ -20,3 +20,7 @@ Route::get('/', function () {
 
 Route::get('/todo', [TodoController::class, 'index'])->name('todo.index');
 Route::post('/todo', [TodoController::class, 'insert'])->name('todo.insert');
+Route::post('/todo/{todo}', [TodoController::class, 'update'])->name('todo.update');
+Route::post('/todo/{todo}/remove', [TodoController::class, 'destroy'])->name('todo.destroy');
+
+Route::get('/todo-list', [TodoController::class, 'todoList']);
